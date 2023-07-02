@@ -6,7 +6,6 @@ public class HealthDisplay : MonoBehaviour
     [SerializeField] private Player _player;
     [SerializeField] private TMP_Text _healthText;
 
-
     private void OnEnable()
     {
         _player.HealthChanged += OnHealthChanged;

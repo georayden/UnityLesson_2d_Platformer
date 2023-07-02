@@ -1,12 +1,14 @@
 using System.Collections.Generic;
 using UnityEngine;
 
+[RequireComponent(typeof(SpriteRenderer))]
+[RequireComponent(typeof(Animator))]
 public class EnemyMover : MonoBehaviour
 {
+    private const string Speed = "Speed";
+
     [SerializeField] private float _speed;
     [SerializeField] private List<Transform> _patrolPoints;
-
-    private const string Speed = "Speed";
 
     private int _currentPatrolPoint = 0;
 

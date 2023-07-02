@@ -13,25 +13,25 @@ public class PhysicsMovement : MonoBehaviour
     protected Vector2 TargetVelocity;
     protected bool Grounded;
 
-    private Vector2 GroundNormal;
-    private Rigidbody2D rb2d;
-    private ContactFilter2D contactFilter;
-    private RaycastHit2D[] hitBuffer = new RaycastHit2D[16];
-    private List<RaycastHit2D> hitBufferList = new List<RaycastHit2D>(16);
+    private Vector2 _groundNormal;
+    private Rigidbody2D _rb2d;
+    private ContactFilter2D _contactFilter;
+    private RaycastHit2D[] _hitBuffer = new RaycastHit2D[16];
+    private List<RaycastHit2D> _hitBufferList = new List<RaycastHit2D>(16);
 
     private const float minMoveDistance = 0.001f;
     private const float shellRadius = 0.01f;
 
     private void OnEnable()
     {
-        rb2d = GetComponent<Rigidbody2D>();
+        _rb2d = GetComponent<Rigidbody2D>();
     }
 
     private void Start()
     {
-        contactFilter.useTriggers = false;
-        contactFilter.SetLayerMask(LayerMask);
-        contactFilter.useLayerMask = true;
+        _contactFilter.useTriggers = false;
+        _contactFilter.SetLayerMask(LayerMask);
+        _contactFilter.useLayerMask = true;
     }
 
     private void FixedUpdate()
@@ -42,7 +42,7 @@ public class PhysicsMovement : MonoBehaviour
         Grounded = false;
 
         Vector2 deltaPosition = Velocity * Time.deltaTime;
-        Vector2 moveAlongGround = new Vector2(GroundNormal.y, -GroundNormal.x);
+        Vector2 moveAlongGround = new Vector2(_groundNormal.y, -_groundNormal.x);
         Vector2 move = moveAlongGround * deltaPosition.x;
 
         Movement(move, false);
@@ -58,24 +58,24 @@ public class PhysicsMovement : MonoBehaviour
 
         if (distance > minMoveDistance)
         {
-            int count = rb2d.Cast(move, contactFilter, hitBuffer, distance + shellRadius);
+            int count = _rb2d.Cast(move, _contactFilter, _hitBuffer, distance + shellRadius);
 
-            hitBufferList.Clear();
+            _hitBufferList.Clear();
 
             for (int i = 0; i < count; i++)
             {
-                hitBufferList.Add(hitBuffer[i]);
+                _hitBufferList.Add(_hitBuffer[i]);
             }
 
-            for (int i = 0; i < hitBufferList.Count; i++)
+            for (int i = 0; i < _hitBufferList.Count; i++)
             {
-                Vector2 currentNormal = hitBufferList[i].normal;
+                Vector2 currentNormal = _hitBufferList[i].normal;
                 if (currentNormal.y > MinGroundNormalY)
                 {
                     Grounded = true;
                     if (yMovement)
                     {
-                        GroundNormal = currentNormal;
+                        _groundNormal = currentNormal;
                         currentNormal.x = 0;
                     }
                 }
@@ -86,11 +86,11 @@ public class PhysicsMovement : MonoBehaviour
                     Velocity = Velocity - projection * currentNormal;
                 }
 
-                float modifiedDistance = hitBufferList[i].distance - shellRadius;
+                float modifiedDistance = _hitBufferList[i].distance - shellRadius;
                 distance = modifiedDistance < distance ? modifiedDistance : distance;
             }
         }
 
-        rb2d.position = rb2d.position + move.normalized * distance;
+        _rb2d.position = _rb2d.position + move.normalized * distance;
     }
 }

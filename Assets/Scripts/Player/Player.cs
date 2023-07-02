@@ -4,7 +4,7 @@ using UnityEngine.Events;
 [RequireComponent(typeof(Wallet))]
 public class Player : MonoBehaviour
 {
-    [SerializeField] private int _health = 5;
+    [SerializeField] private int _health;
 
     private Wallet _wallet;
 

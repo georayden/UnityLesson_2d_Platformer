@@ -1,7 +1,5 @@
 using UnityEngine;
 
-[RequireComponent(typeof(SpriteRenderer))]
-[RequireComponent(typeof(Animator))]
 public class Enemy : MonoBehaviour
 {
     [SerializeField] private int _damage;
